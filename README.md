@@ -4,12 +4,17 @@
   <img src="Gemini_Generated_Image_i45sm2i45sm2i45s.png" alt="Fraud Detection App — secure transactions, protect identity" width="720">
 </p>
 
-> **Welcome to the Fraud Detection App** — secure your transactions and protect your identity. This project combines **machine learning**, **interactive dashboards**, and a **Streamlit** web app to spot suspicious financial activity.
+End-to-end **fraud detection** for financial-style transactions: engineered features, **Random Forest** with **threshold tuning**, a **Streamlit** demo, and **Power BI** monitoring.
 
 ---
 
 ## Table of contents
 
+- [Problem](#problem)
+- [Solution](#solution)
+- [Results](#results)
+- [Business impact](#business-impact)
+- [Demo](#demo)
 - [Overview](#overview)
 - [What this project does](#what-this-project-does)
 - [Architecture (ML pipeline)](#architecture-ml-pipeline)
@@ -19,6 +24,85 @@
 - [How to run](#how-to-run)
 - [Project structure](#project-structure)
 - [About the developer](#about-the-developer)
+
+---
+
+## Problem
+
+**Fraud detection in financial transactions** — illegitimate charges and suspicious activity are costly for users and businesses. The goal is to flag high-risk transactions early using historical patterns (amount, location, device, merchant, payment method, and related signals) rather than relying on rules alone.
+
+---
+
+## Solution
+
+- **ML pipeline** built with **Scikit-learn** (preprocessing + model in a single pipeline).
+- **Random Forest** classifier with **threshold tuning** on predicted probabilities to balance precision and recall and better catch fraud under class imbalance.
+- **Deployment**: trained artifact (`fraud_model.pkl`) consumed by a **Streamlit** app for interactive prediction; **Power BI** for KPIs and geographic/temporal views.
+
+---
+
+## Results
+
+| Metric | Value |
+|--------|-------|
+| **ROC-AUC** | **0.84** |
+| **Recall** | **0.81** |
+
+*(Reported on the tuned evaluation setup; see `ML Code/` notebooks for full metrics and confusion matrix.)*
+
+---
+
+## Business impact
+
+- **Identifies high-risk transactions** so analysts or automated rules can review or block before settlement.
+- **Helps reduce fraud losses** by prioritizing recall on the positive (fraud) class while monitoring overall precision and ROC-AUC.
+- Supports **operational dashboards** (Power BI) for fraud counts, rates, and location trends.
+
+---
+
+## Demo
+
+Screenshots from the **Streamlit** app (**PHOTO**, **USER INPUT**, **VISUALIZATION**) and the **Power BI** report.
+
+### Streamlit — PHOTO tab
+
+Hero graphic: welcome screen with fraud / cybersecurity theme (**FRAUD DETECTION** caption).
+
+<p align="center">
+  <img src="screenshots/streamlit_photo_tab.png" alt="Streamlit app — PHOTO tab with fraud detection hero graphic" width="720">
+</p>
+
+### Streamlit — USER INPUT tab
+
+Transaction fields: **amount**, **age**, **device**, **location**, **payment method**, **merchant**, **category**, and **predict**.
+
+<p align="center">
+  <img src="screenshots/streamlit_user_input.png" alt="Streamlit app — USER INPUT tab" width="720">
+</p>
+
+### Streamlit — VISUALIZATION tab
+
+**Amount per location (sum)** and **fraud vs non-fraud** bar charts.
+
+<p align="center">
+  <img src="screenshots/streamlit_visualization.png" alt="Streamlit app — VISUALIZATION tab" width="720">
+</p>
+
+### Power BI — fraud monitoring
+
+KPIs, fraud rate, geography, trends, and transaction-level views.
+
+<p align="center">
+  <img src="power%20bi/Screenshot%202026-03-22%20174803.png" alt="Power BI — KPIs and fraud dashboard" width="720">
+</p>
+
+<p align="center">
+  <img src="power%20bi/Screenshot%202026-03-22%20174841.png" alt="Power BI — fraud analytics" width="720">
+</p>
+
+<p align="center">
+  <img src="power%20bi/Screenshot%202026-03-22%20174929.png" alt="Power BI — metrics and trends" width="720">
+</p>
 
 ---
 
@@ -33,106 +117,114 @@ This repository is an end-to-end **fraud detection** project: messy transaction 
 | Area | Description |
 |------|-------------|
 | **Data** | ETL, EDA, and feature engineering on transaction-style records (amount, location, device, merchant, etc.). |
-| **ML** | Models such as **Logistic Regression**, **Random Forest**, and **Gradient Boosting** inside pipelines; evaluation with accuracy, precision, recall, F1, ROC-AUC, and confusion matrices. |
-| **App** | **Streamlit** tabs: hero image, project description, **user input** form, **visualizations**, and **about developer**. |
+| **ML** | **Logistic Regression**, **Random Forest**, and **Gradient Boosting** in pipelines; evaluation with accuracy, precision, recall, F1, ROC-AUC, and confusion matrices; **threshold tuning** for deployment. |
+| **App** | **Streamlit** tabs: **PHOTO**, **ABOUT PROJECT**, **USER INPUT**, **VISUALIZATION**, **ABOUT DEVELOPER**. |
 | **BI** | **Power BI** dashboards for KPIs, fraud rate, geography, and trends. |
 
 ---
 
 ## Architecture (ML pipeline)
 
-Conceptually the system follows this flow (from raw signals → decision):
-
 1. **Ingest** — transaction streams, user behavior, and account context.  
 2. **Feature engineering** — signals like transaction patterns, location consistency, and time-of-day behavior.  
-3. **Train** — supervised learning on labeled **fraud vs legitimate** data; optional anomaly-style thinking for rare patterns.  
-4. **Deploy** — saved model (`fraud_model.pkl`) serves **real-time inference**.  
-5. **Decide** — model outputs a **fraud score / probability**; the app surfaces it so analysts or rules can **approve**, **review**, or **block** high-risk cases.
+3. **Train** — supervised learning on labeled **fraud vs legitimate** data; **Random Forest** with tuned decision threshold.  
+4. **Deploy** — `fraud_model.pkl` serves **real-time inference** in Streamlit.  
+5. **Decide** — fraud probability supports **approve**, **review**, or **block** workflows.
 
 ---
 
 ## App walkthrough
 
-The Streamlit app is organized into tabs:
-
 | Tab | Purpose |
 |-----|---------|
-| **PHOTO** | Project hero / branding image (same style as the banner at the top of this README). |
-| **ABOUT PROJECT** | Describes the ML approach, pipelines, metrics, and tools used. |
-| **USER INPUT** | Fields such as **amount**, **age**, **device**, **location**, **payment method**, **merchant**, and **category** — then **Predict** runs the loaded model. |
-| **VISUALIZATION** | Charts like **amount per location (sum)** and **fraud vs non-fraud** counts from the engineered dataset. |
-| **ABOUT DEVELOPER** | Bio, skills, and links (GitHub / LinkedIn). |
+| **PHOTO** | Branding / hero image (see [Demo](#demo)). |
+| **ABOUT PROJECT** | ML approach, pipelines, metrics, and tools. |
+| **USER INPUT** | Enter transaction details and run **predict** (see [Demo](#demo)). |
+| **VISUALIZATION** | **Amount per location** and **fraud vs non-fraud** charts (see [Demo](#demo)). |
+| **ABOUT DEVELOPER** | Bio, skills, GitHub / LinkedIn. |
 
-**Tip:** After prediction, the app shows **probability**, a **progress bar**, and messages like **Fraud Detected** or **Safe Transaction**, with themed images for fraud vs safe outcomes.
+After prediction: **probability**, progress bar, **Fraud Detected** vs **Safe Transaction**, with themed images for outcomes.
 
 ---
 
 ## Power BI dashboard
 
-The Power BI report gives a **monitoring-style** view: total amounts, fraud counts, fraud rate, fraud by location, trends over time, and transaction-level detail.
-
-<p align="center">
-  <img src="power%20bi/Screenshot%202026-03-22%20174803.png" alt="Power BI fraud dashboard — KPIs and charts" width="720">
-</p>
-
-<p align="center">
-  <img src="power%20bi/Screenshot%202026-03-22%20174841.png" alt="Power BI — fraud analytics views" width="720">
-</p>
-
-<p align="center">
-  <img src="power%20bi/Screenshot%202026-03-22%20174929.png" alt="Power BI — transaction and fraud metrics" width="720">
-</p>
-
-These screenshots help readers **see** how totals, fraud rate, geography, and time trends are presented alongside the ML app.
+The report provides a **monitoring-style** view: total amounts, fraud counts, **fraud rate %**, fraud by location, trends over time, and transaction tables. **Screenshots** are in the [Demo](#demo) section above.
 
 ---
 
 ## Tech stack
 
 - **Python** · **Pandas** · **NumPy**  
-- **Scikit-learn** (pipelines, Logistic Regression, Random Forest, Gradient Boosting)  
-- **Streamlit** (web UI)  
-- **Joblib** (model persistence)  
+- **Scikit-learn** (pipelines, Random Forest, Logistic Regression, Gradient Boosting)  
+- **Streamlit** · **Joblib**  
 - **Matplotlib** · **Seaborn**  
-- **MySQL** · **ETL**  
-- **Power BI**
+- **MySQL** · **ETL** · **Power BI**
 
 ---
 
 ## How to run
 
-1. **Clone** this repository and open the project folder.  
-2. **Install** Python dependencies (example):
+1. Clone the repository and open the project folder.  
+2. Install dependencies:
 
    ```bash
    pip install pandas scikit-learn streamlit joblib matplotlib seaborn
    ```
 
-3. Ensure **`fraud_model.pkl`** is present at the project root (or adjust the path in `App/app.py`).  
-4. Ensure **`feature_engineering.csv`** exists where the app expects it for the **VISUALIZATION** tab (update the path in `App/app.py` if your layout differs).  
-5. **Launch** the app:
+3. Place **`fraud_model.pkl`** at the project root (or update the path in `App/app.py`).  
+4. Point **`feature_engineering.csv`** to your file for the **VISUALIZATION** tab (adjust paths in `App/app.py` if needed).  
+5. Launch:
 
    ```bash
    streamlit run App/app.py
    ```
 
-> **Note:** Some image and CSV paths in `App/app.py` may point to machine-specific locations. For portability, change those to **paths relative to the project folder** (same idea as the images in this README).
+> **Note:** Some paths in `App/app.py` may be machine-specific; use paths **relative to the project folder** for portability (same as image paths in this README).
 
 ---
 
 ## Project structure
 
-| Path | Role |
-|------|------|
-| `App/app.py` | Streamlit fraud detection application |
-| `fraud_model.pkl` | Trained model artifact |
-| `Feature Engineering/` | Notebooks and engineered datasets |
-| `data/` | Raw and cleaned data |
-| `EDA/` | Exploratory analysis |
-| `ETL/` | Extract, transform, load notebooks |
-| `ML Code/` | Model training notebooks |
-| `power bi/` | Power BI dashboard screenshots |
-| `SQL/` | Example SQL queries |
+```
+Fraud_Detection/
+├── App/
+│   └── app.py                          # Streamlit fraud detection app
+├── data/
+│   ├── raw_data/
+│   │   └── ultra_messy_fraud_dataset_50000_rows.csv
+│   └── clean_data/
+│       └── fraud_cleaned_data_set.csv
+├── EDA/
+│   └── EDA.ipynb
+├── ETL/
+│   ├── Extract/
+│   │   └── Extract.ipynb
+│   ├── Transform/
+│   │   └── transform.ipynb
+│   └── Load/
+│       └── Load.ipynb
+├── Feature Engineering/
+│   ├── Feature_engineering.py.ipynb
+│   ├── feature_engineering.csv
+│   └── feature_engineering.xlsx
+├── ML Code/
+│   └── ML.py.ipynb
+├── power bi/                           # Power BI dashboard screenshots
+├── screenshots/                        # Streamlit UI (PHOTO, USER INPUT, VISUALIZATION)
+│   ├── streamlit_photo_tab.png
+│   ├── streamlit_user_input.png
+│   └── streamlit_visualization.png
+├── SQL/
+│   └── fraud_detection_sql_queries.sql
+├── Gemini_Generated_Image_i45sm2i45sm2i45s.png
+├── README.md
+├── fraud_model.pkl                     # Deployed trained model (Streamlit)
+├── fraud_models.pkl
+├── Pipelines.pkl
+├── OIP.jpg
+└── OIP (1).jpg
+```
 
 ---
 
@@ -143,12 +235,10 @@ These screenshots help readers **see** how totals, fraud rate, geography, and ti
 - **GitHub:** [github.com/avinashreddy0](https://github.com/avinashreddy0)  
 - **LinkedIn:** [Avinash Reddy Induri](https://www.linkedin.com/in/avinash-reddy-induri-4662b832a/)  
 
-**Contact:**  
-- Email: induriavinashreddy05@gmail.com  
-- Phone: 9346739650  
+**Contact:** induriavinashreddy05@gmail.com · 9346739650  
 
 ---
 
 <p align="center">
-  <sub>Built with curiosity for safer transactions and clearer data stories.</sub>
+  <sub>Built for safer transactions and clearer data stories.</sub>
 </p>
