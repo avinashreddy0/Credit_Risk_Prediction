@@ -152,7 +152,7 @@ with tab4:
         data preprocessing, and building interactive dashboards.
 
         -[GitHub](https://github.com/avinashreddy0)
-        -[linkedin](https://www.linkedin.com/in/avinash-reddy-induri-4662b832a/')
+        -[linkedin](https://www.linkedin.com/in/avinash-reddy-induri-data-science/)
 
         **skill**
         -python
