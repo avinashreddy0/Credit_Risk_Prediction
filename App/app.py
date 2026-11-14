@@ -41,7 +41,7 @@ with tab1:
 
     st.write('''
     -**Technologies Used**
-    -Python 
+    -Python
     -Scikit-learn 
     -Pandas / NumPy
    -Streamlit 
