@@ -43,7 +43,7 @@ with tab1:
     -**Technologies Used**
     -Python
     -Scikit-learn 
-    -Pandas / NumPy
+    -Pandas / Numpy
    -Streamlit 
     -Machine Learning Pipelines
     -baseline model(**logistic regression**)
