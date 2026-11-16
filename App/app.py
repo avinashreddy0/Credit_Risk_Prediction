@@ -29,7 +29,7 @@ with tab0:
 
 
 
-with tab1: 
+with tab1:
    
     st.subheader(':rainbow[About Project]')
 
