@@ -163,7 +163,7 @@ with tab4:
         -scikit-learn
         -machine learning
         -power bi
-        -mysql
+        -MYSQL
         -ETL
         -statistic
         -streamlit(deploy)
